@@ -1,0 +1,100 @@
+# `docker compose up`                      -> API (port 8000) + Qdrant
+# `docker compose --profile full up`       -> also the Next.js UI (port 3000) and Phoenix tracing (port 6006)
+# `docker compose --profile test run --rm tests` -> backend test suite inside Docker (includes OCR test)
+#
+# Values come from your shell or a .env file next to this file; defaults point at ./data.
+
+x-api-env: &api-env
+  CORPUS_DIR: ${CORPUS_DIR:-./data/corpus}
+  MANIFEST_PATH: ${MANIFEST_PATH:-./data/manifest.json}
+  DB_PATH: ${DB_PATH:-./data/veltrix.db}
+  STATE_DB_PATH: ${STATE_DB_PATH:-./state/app_state.db}
+  APP_TODAY: ${APP_TODAY:-}
+  APP_TIMEZONE: ${APP_TIMEZONE:-UTC}
+  LLM_PROVIDER: ${LLM_PROVIDER:-auto}
+  LLM_MODEL: ${LLM_MODEL:-}
+  LLM_TIMEOUT_S: ${LLM_TIMEOUT_S:-20}
+  LLM_EXTRA_BODY: ${LLM_EXTRA_BODY:-}
+  LLM_FALLBACK_MODELS: ${LLM_FALLBACK_MODELS:-}
+  LLM_HEDGE_AFTER_S: ${LLM_HEDGE_AFTER_S:-4}
+  NVIDIA_API_KEY: ${NVIDIA_API_KEY:-}
+  NVIDIA_BASE_URL: ${NVIDIA_BASE_URL:-https://integrate.api.nvidia.com/v1}
+  OLLAMA_API_KEY: ${OLLAMA_API_KEY:-}
+  OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-https://ollama.com/v1}
+  OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+  OPENAI_BASE_URL: ${OPENAI_BASE_URL:-}
+  ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+  GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+  AGENT_MODE: ${AGENT_MODE:-codemode}
+  QDRANT_URL: ${QDRANT_URL:-http://qdrant:6333}
+  EMBEDDING_BACKEND: ${EMBEDDING_BACKEND:-fastembed}
+  EMBEDDING_MODEL: ${EMBEDDING_MODEL:-BAAI/bge-small-en-v1.5}
+  OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+  PHOENIX_UI_URL: ${PHOENIX_UI_URL:-http://localhost:6006}
+  LOG_LEVEL: ${LOG_LEVEL:-INFO}
+  DEV_ENDPOINTS: ${DEV_ENDPOINTS:-true}
+  DEMO_PASSWORD: ${DEMO_PASSWORD:-veltrix}
+  APP_SECRET: ${APP_SECRET:-}
+  CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
+  MCP_ALLOWED_HOSTS: ${MCP_ALLOWED_HOSTS:-}
+
+services:
+  api:
+    build:
+      context: ./backend
+      target: runtime
+    ports:
+      - "8000:8000"
+    environment: *api-env
+    volumes:
+      - ./data:/app/data
+      - api_state:/app/state
+    depends_on:
+      - qdrant
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health').status == 200 else 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 60
+      start_period: 20s
+    restart: unless-stopped
+
+  qdrant:
+    image: qdrant/qdrant:v1.20.0
+    volumes:
+      - qdrant_data:/qdrant/storage
+    restart: unless-stopped
+
+  phoenix:
+    image: arizephoenix/phoenix:version-21.0.0
+    profiles: ["full"]
+    environment:
+      PHOENIX_ENABLE_AUTH: "false"   # local single-user demo; enable auth + PHOENIX_API_KEY for shared setups
+    ports:
+      - "6006:6006"   # UI + OTLP/HTTP (/v1/traces)
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+    profiles: ["full"]
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  tests:
+    build:
+      context: ./backend
+      target: test
+    profiles: ["test"]
+    environment:
+      LLM_PROVIDER: fake
+      EMBEDDING_BACKEND: hash
+
+volumes:
+  api_state:
+  qdrant_data:

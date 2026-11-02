@@ -1,0 +1,11 @@
+# Normalise text files to LF in the repository (Dockerfiles and scripts run on Linux).
+* text=auto eol=lf
+
+# Binary assets
+*.pdf  binary
+*.docx binary
+*.png  binary
+*.jpg  binary
+*.ico  binary
+*.db   binary
+*.onnx binary

@@ -1,0 +1,33 @@
+# secrets (real keys live only in .env)
+.env
+.env.*
+!.env.example
+
+# data supplied by the graders (mounted at runtime) — keep only the instructions
+data/*
+!data/README.md
+state/
+
+# original assessment materials (not redistributed; copy them into ./data to run)
+/TASK.pdf
+/corpus/
+/manifest.json
+/veltrix.db
+
+# python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# node
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+frontend/next-env.d.ts
+
+# misc
+.DS_Store
+*.log

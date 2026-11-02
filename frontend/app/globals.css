@@ -1,0 +1,368 @@
+@import "tailwindcss";
+
+/* ---- design tokens (light) --------------------------------------------------------------------- */
+:root {
+  --bg: #f7f7f9;
+  --bg-elev: #ffffff;
+  --panel: #ffffff;
+  --panel-2: #f3f4f7;
+  --panel-3: #eceef3;
+  --sidebar: #fbfbfc;
+  --border: #e4e6eb;
+  --border-strong: #d3d7df;
+  --text: #15171c;
+  --text-2: #3c4250;
+  --muted: #6a7283;
+  --accent: #4f46e5;
+  --accent-2: #6366f1;
+  --accent-soft: #eef0ff;
+  --accent-text: #3730a3;
+  --ok: #15803d;
+  --ok-soft: #e7f6ec;
+  --warn: #a16207;
+  --warn-soft: #fdf4dc;
+  --bad: #b42318;
+  --bad-soft: #fdecea;
+  --info: #0e7490;
+  --info-soft: #e3f5f8;
+  --code-bg: #0f1320;
+  --code-text: #dfe5f3;
+  --code-kw: #c4a7ff;
+  --code-fn: #7dd3fc;
+  --code-str: #a5e3a1;
+  --code-num: #fbbf77;
+  --code-cmt: #7c869c;
+  --shadow: 0 1px 2px rgb(16 24 40 / 0.04), 0 4px 16px rgb(16 24 40 / 0.06);
+  --shadow-lg: 0 12px 40px rgb(16 24 40 / 0.14);
+  --radius: 14px;
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  color-scheme: light;
+}
+
+/* ---- dark: follows the system unless the user picked a theme ------------------------------------ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b0d12;
+    --bg-elev: #12151c;
+    --panel: #12151c;
+    --panel-2: #181c25;
+    --panel-3: #1f2430;
+    --sidebar: #0e1016;
+    --border: #232835;
+    --border-strong: #2f3545;
+    --text: #e9ecf2;
+    --text-2: #c3c9d6;
+    --muted: #8b93a6;
+    --accent: #818cf8;
+    --accent-2: #a5b4fc;
+    --accent-soft: #1d2140;
+    --accent-text: #c7d2fe;
+    --ok: #4ade80;
+    --ok-soft: #10261a;
+    --warn: #facc15;
+    --warn-soft: #2a2410;
+    --bad: #f87171;
+    --bad-soft: #2d1414;
+    --info: #67e8f9;
+    --info-soft: #0f2629;
+    --code-bg: #090b11;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 16px rgb(0 0 0 / 0.3);
+    --shadow-lg: 0 12px 40px rgb(0 0 0 / 0.5);
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #0b0d12;
+  --bg-elev: #12151c;
+  --panel: #12151c;
+  --panel-2: #181c25;
+  --panel-3: #1f2430;
+  --sidebar: #0e1016;
+  --border: #232835;
+  --border-strong: #2f3545;
+  --text: #e9ecf2;
+  --text-2: #c3c9d6;
+  --muted: #8b93a6;
+  --accent: #818cf8;
+  --accent-2: #a5b4fc;
+  --accent-soft: #1d2140;
+  --accent-text: #c7d2fe;
+  --ok: #4ade80;
+  --ok-soft: #10261a;
+  --warn: #facc15;
+  --warn-soft: #2a2410;
+  --bad: #f87171;
+  --bad-soft: #2d1414;
+  --info: #67e8f9;
+  --info-soft: #0f2629;
+  --code-bg: #090b11;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 16px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 12px 40px rgb(0 0 0 / 0.5);
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--text);
+  height: 100%;
+}
+
+body {
+  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "cv11", "ss01";
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+/* Component classes live in the components layer so Tailwind utilities (e.g. lg:hidden) can override them. */
+@layer components {
+/* ---- primitives ---------------------------------------------------------------------------------- */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: 12px;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 6px;
+  padding: 1px 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: 0.01em;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 7px 14px;
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: background 0.15s, border-color 0.15s, transform 0.05s;
+}
+.btn:hover {
+  background: var(--panel-2);
+  border-color: var(--border-strong);
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: var(--accent-2);
+  border-color: var(--accent-2);
+}
+.btn-ghost {
+  border-color: transparent;
+  background: transparent;
+}
+.btn-ghost:hover {
+  background: var(--panel-2);
+  border-color: transparent;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.input {
+  width: 100%;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 9px 12px;
+  font-size: 14px;
+  color: var(--text);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-2);
+  margin-bottom: 6px;
+}
+
+.code {
+  background: var(--code-bg);
+  color: var(--code-text);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-family: ui-monospace, "JetBrains Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  overflow-x: auto;
+  white-space: pre;
+}
+.tok-kw { color: var(--code-kw); }
+.tok-fn { color: var(--code-fn); }
+.tok-str { color: var(--code-str); }
+.tok-num { color: var(--code-num); }
+.tok-cmt { color: var(--code-cmt); font-style: italic; }
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13.5px;
+}
+.table th {
+  text-align: left;
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--muted);
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel-2);
+}
+.table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ---- markdown answers ---------------------------------------------------------------------------- */
+.prose-chat {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--text);
+}
+.prose-chat p {
+  margin: 0 0 0.7em;
+}
+.prose-chat p:last-child {
+  margin-bottom: 0;
+}
+.prose-chat ul,
+.prose-chat ol {
+  margin: 0.3em 0 0.8em;
+  padding-left: 1.3em;
+}
+.prose-chat ul {
+  list-style: disc;
+}
+.prose-chat ol {
+  list-style: decimal;
+}
+.prose-chat li {
+  margin: 0.2em 0;
+}
+.prose-chat strong {
+  font-weight: 650;
+}
+.prose-chat code {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0 5px;
+  font-size: 0.88em;
+}
+.prose-chat table {
+  font-size: 13px;
+  margin: 0.5em 0 0.9em;
+  border-collapse: collapse;
+}
+.prose-chat th,
+.prose-chat td {
+  border: 1px solid var(--border);
+  padding: 5px 9px;
+}
+.prose-chat a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+}
+
+/* ---- motion -------------------------------------------------------------------------------------- */
+@keyframes pulse-dot {
+  0%, 80%, 100% { opacity: 0.25; transform: scale(0.85); }
+  40% { opacity: 1; transform: scale(1); }
+}
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--accent);
+  display: inline-block;
+  animation: pulse-dot 1.2s infinite ease-in-out;
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+.fade-up {
+  animation: fade-up 0.25s ease-out both;
+}
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--panel-2) 0px, var(--panel-3) 80px, var(--panel-2) 160px);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: 8px;
+}
+
+.scroll-thin::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 8px;
+}
+.scroll-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
