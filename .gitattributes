@@ -9,3 +9,4 @@
 *.ico  binary
 *.db   binary
 *.onnx binary
+*.mp4  binary

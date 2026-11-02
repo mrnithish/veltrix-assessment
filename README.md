@@ -10,6 +10,9 @@ The agent uses **Code Mode**. Instead of calling tools one at a time, the model 
 Python program that calls the tools. The program runs in a locked-down sandbox process. Every step
 is traced (OpenTelemetry → Phoenix, a per-request trace store, JSON logs, Prometheus metrics).
 
+**Start here:** **[SUBMISSION.md](SUBMISSION.md)** (one-page summary for reviewers) ·
+▶ **[Walkthrough video](docs/veltrix_walkthrough.mp4)** (5.5 min: design, then a live demo).
+
 Docs: **[DESIGN.md](DESIGN.md)** (the seven required topics, ≤ 2 pages) · **[ARCHITECTURE.md](ARCHITECTURE.md)**
 (request flow, Code Mode security, fallback and hedging, token economics, MCP, scaling, decisions).
 
